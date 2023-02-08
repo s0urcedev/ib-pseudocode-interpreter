@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ibpseudocode.wsgi.application'
+WSGI_APPLICATION = 'ibpseudocode.wsgi.app'
 
 
 # Database
