@@ -1,8 +1,8 @@
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
-import subprocess
 import json
 from django.views.decorators.csrf import csrf_exempt
+from interpreter.code_entities import CodeInternal
 
 @csrf_exempt
 def index(request: HttpRequest) -> HttpResponse:
@@ -10,13 +10,7 @@ def index(request: HttpRequest) -> HttpResponse:
         return render(request, "index.html")
     elif request.method == "POST":
         data: dict[str, str] = json.loads(request.body.decode())
-        sb: subprocess.CompletedProcess = subprocess.run(
-            ['python3', 'static/interpreter/main.py'],
-            # input=f"{data['code']}\n{chr(3)}\n{data['input']}".encode(),
-            capture_output=True
-        )
         return HttpResponse(json.dumps({
-            "stdout": sb.stdout.decode(),
-            "stderr": sb.stderr.decode()
+            "output": CodeInternal(data['code'], data['input']).run()
         }))
     return HttpResponse("")

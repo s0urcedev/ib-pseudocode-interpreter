@@ -207,7 +207,7 @@
                     input: inputTextarea.value
                 })
             }).then(res => res.json()).then(data => {
-                outputTextarea.value = (data.stderr === "" ? data.stdout.trim() : data.stderr.slice(data.stderr.slice(0, data.stderr.length - 2).lastIndexOf("\n") + 1, data.stderr.length))
+                outputTextarea.value = data["output"];
                 outputTextarea.style.height = calcHeight(outputTextarea.value) + "px";
             });
         }

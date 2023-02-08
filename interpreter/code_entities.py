@@ -1,8 +1,12 @@
 from typing import Any, Callable
 from functools import reduce
 from re import search, findall, Match
-from tools import adapt_condition, adapt_expression, bitwise_not
-from data_structures import Array, Dictionary, Collection, Stack, Queue
+try:
+    from tools import adapt_condition, adapt_expression, bitwise_not
+    from data_structures import Array, Dictionary, Collection, Stack, Queue
+except:
+    from interpreter.tools import adapt_condition, adapt_expression, bitwise_not
+    from interpreter.data_structures import Array, Dictionary, Collection, Stack, Queue
 
 class Instruction:
 
@@ -35,14 +39,26 @@ class Instruction:
             self.content: tuple[str, str] = (text.strip(), "")
 
     def input(self) -> None:
-        text: str = input()
+        if "__stdin__" in self.read_only[0]:
+            while True:
+                text: str = self.read_only[0]["__stdin__"].pop()
+                if text != "":
+                    break
+        else:
+            while True:
+                text: str = input()
+                if text != "":
+                        break
         try:
             self.read_write[self.content[0]] = int(text)
         except:
             self.read_write[self.content[0]] = text
 
     def output(self) -> None:
-        print(eval(adapt_expression(self.content[0]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write)))
+        if "__stdout__" in self.read_only[0]:
+            self.read_only[0]["__stdout__"].append(str(eval(adapt_expression(self.content[0]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))))
+        else:
+            print(eval(adapt_expression(self.content[0]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write)))
 
     def assign(self) -> None:
         match_obj: Match | None = search(r"\[.*\]", self.content[0])
@@ -291,6 +307,31 @@ class Code:
 
     def run(self) -> None:
         self.global_block.execute()
+    
+    def __str__(self) -> str:
+        return f"{'{'} global_vars: {self.global_vars}, global_blocks: {self.global_block} {'}'}"
+
+class CodeInternal:
+
+    def __init__(self, code: str, stdin: str) -> None:
+        self.global_vars: dict[str, Any] = {
+            "bitwise_not": bitwise_not,
+            "Array": Array,
+            "Dictionary": Dictionary,
+            "Collection": Collection,
+            "Stack": Stack,
+            "Queue": Queue,
+            "__stdin__": stdin.replace("\r", "").split("\n")[::-1],
+            "__stdout__": []
+        }
+        self.global_block: Block = Block(code, [self.global_vars], {})
+
+    def run(self) -> str:
+        try:
+            self.global_block.execute()
+            return "\n".join(self.global_vars["__stdout__"])
+        except Exception as exc:
+            return str(exc)
     
     def __str__(self) -> str:
         return f"{'{'} global_vars: {self.global_vars}, global_blocks: {self.global_block} {'}'}"
