@@ -40,15 +40,21 @@ class Instruction:
 
     def input(self) -> None:
         if "__stdin__" in self.read_only[0]:
-            while True:
-                text: str = self.read_only[0]["__stdin__"].pop()
-                if text != "":
-                    break
-        else:
-            while True:
-                text: str = input()
-                if text != "":
+            try:
+                while True:
+                    text = self.read_only[0]["__stdin__"].pop()
+                    if text != "":
                         break
+            except:
+                raise Exception("Not all inputs are given")
+        else:
+            try:
+                while True:
+                    text = input()
+                    if text != "":
+                            break
+            except:
+                raise Exception("Not all inputs are given")
         try:
             self.read_write[self.content[0]] = int(text)
         except:
