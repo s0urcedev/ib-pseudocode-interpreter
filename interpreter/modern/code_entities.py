@@ -5,8 +5,8 @@ try:
     from tools import adapt_condition, adapt_expression, bitwise_not
     from data_structures import Array, Dictionary, Collection, Stack, Queue
 except:
-    from interpreter.tools import adapt_condition, adapt_expression, bitwise_not
-    from interpreter.data_structures import Array, Dictionary, Collection, Stack, Queue
+    from interpreter.modern.tools import adapt_condition, adapt_expression, bitwise_not
+    from interpreter.modern.data_structures import Array, Dictionary, Collection, Stack, Queue
 
 class Instruction:
 
