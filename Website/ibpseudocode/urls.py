@@ -1,6 +1,14 @@
-from django.urls import path
-from interpreter import views
+# from django.urls import path
+# from interpreter import views
+
+# urlpatterns = [
+#     path('', views.index)
+# ]
+
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path('', views.index)
+    path('admin/', admin.site.urls),
+    path('', include('interpreter.urls')),
 ]
