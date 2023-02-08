@@ -11,7 +11,7 @@ def index(request: HttpRequest) -> HttpResponse:
     elif request.method == "POST":
         data: dict[str, str] = json.loads(request.body.decode())
         sb: subprocess.CompletedProcess = subprocess.run(
-            ['python', 'static/interpreter/main.py'],
+            ['python3', 'static/interpreter/main.py'],
             input=f"{data['code']}\n{chr(3)}\n{data['input']}".encode(),
             capture_output=True
         )
