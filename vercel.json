@@ -1,14 +1,14 @@
 {
     "builds": [
         {
-            "src": "Website/ibpseudocode/wsgi.py",
+            "src": "ibpseudocode/wsgi.py",
             "use": "@vercel/python"
         }
     ],
     "routes": [
         {
-            "src": "Website/(.*)",
-            "dest": "Website/ibpseudocode/wsgi.py"
+            "src": "/(.*)",
+            "dest": "ibpseudocode/wsgi.py"
         }
     ]
   }
