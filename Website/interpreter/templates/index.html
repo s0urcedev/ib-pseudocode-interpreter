@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IB Pseudocode Interpreter</title>
+    <style>
+        
+        body {
+            background-color: #6481a0;
+            padding: 10px;
+        }
+
+        .editor {
+            font-family: monospace;
+            font-size: 25px;
+            line-height: 30px;
+            background: #282a3a;
+            border-radius: 10px;
+            padding-top: 20px;
+            padding-left: 20px;
+        }
+
+        .header {
+            color: #8198b1;
+            font-size: 30px;
+        }
+
+        .code-editor {
+            margin-top: 5px;
+            display: inline-flex;
+            width: 100%;
+        }
+
+        .std-editor {
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .line-numbers {
+            width: 20px;
+            text-align: right;
+        }
+
+        .line-numbers span {
+            counter-increment: linenumber;
+        }
+
+        .line-numbers span::before {
+            content: counter(linenumber);
+            display: block;
+            color: #506882;
+        }
+
+        #code {
+            width: 100%;
+            line-height: 30px;
+            font-size: 25px;
+            overflow-y: hidden;
+            padding: 0;
+            border: 0;
+            border-radius: 10px;
+            background: #282a3a;
+            color: #8198b1;
+            outline: none;
+            resize: none;
+        }
+
+        #input {
+            width: 100%;
+            line-height: 30px;
+            font-size: 25px;
+            overflow-y: hidden;
+            padding: 0;
+            border: 0;
+            border-radius: 10px;
+            background: #282a3a;
+            color: #8198b1;
+            outline: none;
+            resize: none;
+        }
+
+        #output {
+            width: 100%;
+            line-height: 30px;
+            font-size: 25px;
+            overflow-y: hidden;
+            padding: 0;
+            border: 0;
+            border-radius: 10px;
+            background: #282a3a;
+            color: #8198b1;
+            outline: none;
+            resize: none;
+        }
+
+        #run {
+            display: block;
+            width: 100px;
+            height: 50px;
+            margin: auto;
+            margin-top: 20px;
+            font-size: 30px;
+            overflow-y: hidden;
+            padding: 0;
+            border: 0;
+            border-radius: 10px;
+            background: #282a3a;
+            color: #8198b1;
+            outline: none;
+        }
+
+        #run:hover {
+            opacity: 80%;
+        }
+    </style>
+</head>
+<body>
+    <div class="editor" style="width: calc(100% - 20px);">
+        <span class="header"><b>Code:</b></span>
+        <div class="code-editor">
+            <div class="line-numbers">
+                <span></span>
+            </div>
+            <textarea id="code" name="code" spellcheck="false"></textarea>
+        </div>
+    </div>
+    <div style="display: inline-flex; width: 100%; margin-top: 20px;">
+        <div class="editor" style="width: 50%;">
+            <span class="header"><b>Input:</b></span>
+            <div class="std-editor">
+                <textarea id="input" name="input" spellcheck="false"></textarea>
+            </div>
+        </div>
+        <div class="editor" style="width: 50%; margin-left: 20px;">
+            <span class="header"><b>Output:</b></span>
+            <div class="std-editor">
+                <textarea id="output" name="output" spellcheck="false" readonly></textarea>
+            </div>
+        </div>
+    </div>
+    <button id="run" onclick="run()"><b>Run</b></button>
+    <script>
+        function calcHeight(value) {
+            let numberOfLineBreaks = value.split('\n').length;
+            let newHeight = 20 + numberOfLineBreaks * 30 + 10;
+            return newHeight;
+        }
+
+        const codeTextarea = document.getElementById("code");
+        const inputTextarea = document.getElementById("input");
+        const outputTextarea = document.getElementById("output");
+        const editor = document.querySelector('.code-editor');
+        const lineNumbers = document.querySelector('.line-numbers');
+        if (localStorage.getItem('code') !== undefined) {
+            codeTextarea.value = localStorage.getItem('code');
+            codeTextarea.style.height = calcHeight(codeTextarea.value) + "px";
+            const numberOfLines = codeTextarea.value.split('\n').length;
+            editor.style.gap = String(numberOfLines).length * 10 + "px";
+            lineNumbers.innerHTML = Array(numberOfLines)
+                .fill('<span></span>')
+                .join('');
+        }
+        if (localStorage.getItem('input') !== undefined) {
+            inputTextarea.value = localStorage.getItem('input');
+            inputTextarea.style.height = calcHeight(inputTextarea.value) + "px";
+        }
+        
+
+        codeTextarea.addEventListener('keyup', event => {
+            const numberOfLines = codeTextarea.value.split('\n').length;
+            localStorage.setItem('code', codeTextarea.value);
+            codeTextarea.style.height = calcHeight(codeTextarea.value) + "px";
+            editor.style.gap = String(numberOfLines).length * 10 + "px";
+            lineNumbers.innerHTML = Array(numberOfLines)
+                .fill('<span></span>')
+                .join('');
+        });
+
+        codeTextarea.addEventListener('keydown', event => {
+            if (event.key === 'Tab') {
+                const start = codeTextarea.selectionStart;
+                const end = codeTextarea.selectionEnd;
+                codeTextarea.value = codeTextarea.value.substring(0, start) + '    ' + codeTextarea.value.substring(end);
+                event.preventDefault();
+            }
+        });
+
+        inputTextarea.addEventListener('keyup', event => {
+            localStorage.setItem('input', inputTextarea.value);
+            inputTextarea.style.height = calcHeight(inputTextarea.value) + "px";
+        });
+
+        inputTextarea.addEventListener('keydown', event => {
+            if (event.key === 'Tab') {
+                const start = inputTextarea.selectionStart;
+                const end = inputTextarea.selectionEnd;
+                inputTextarea.value = inputTextarea.value.substring(0, start) + '    ' + inputTextarea.value.substring(end);
+                event.preventDefault();
+            }
+        });
+
+        function run() {
+            fetch('', {
+                method: "POST",
+                body: JSON.stringify({
+                    code: codeTextarea.value,
+                    input: inputTextarea.value
+                })
+            }).then(res => res.json()).then(data => {
+                outputTextarea.value = (data.stderr === "" ? data.stdout.trim() : data.stderr.slice(data.stderr.slice(0, data.stderr.length - 2).lastIndexOf("\n") + 1, data.stderr.length))
+                outputTextarea.style.height = calcHeight(outputTextarea.value) + "px";
+            });
+        }
+    </script>
+</body>
+</html>
