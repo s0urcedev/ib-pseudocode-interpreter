@@ -14,3 +14,10 @@ def index(request: HttpRequest) -> HttpResponse:
             "output": CodeInternal(data['code'], data['input']).run()
         }))
     return HttpResponse("")
+
+@csrf_exempt
+def syntax(request: HttpRequest) -> HttpResponse:
+    with open('static/Syntax.pdf', 'rb') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline;filename=Syntax.pdf'
+        return response
