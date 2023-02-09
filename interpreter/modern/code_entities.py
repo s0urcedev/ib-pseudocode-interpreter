@@ -221,39 +221,39 @@ class Block:
         counter = 0
         lines = text.split("\n")
         for t in lines:
-            if search(r"^//", t.strip()):
+            if search(r"^\W*//", t.strip()):
                 continue
-            elif "end procedure" in t.lower() and procedure_statement != "" and len(t) - len(t.lstrip()) == len(procedure_statement) - len(procedure_statement.lstrip()):
+            elif search(r"^\W*end procedure\W*$", t.lower()) and procedure_statement != "" and len(t) - len(t.lstrip()) == len(procedure_statement) - len(procedure_statement.lstrip()):
                 self.read_write[findall(r"(\w+)", procedure_statement)[1]] = Procedure(procedure_statement, "\n".join(current_procedure_block), self.read_only + [self.read_write]).execute
                 procedure_statement = ""
                 current_procedure_block = []
                 state = ""
-            elif "procedure" in t.lower() and state == "":
+            elif search(r"^\W*procedure\W+", t.lower()) and state == "":
                 state = "procedure"
                 procedure_statement = adapt_condition(t)
             elif state == "procedure":
                 current_procedure_block.append(t)
-            elif "end function" in t.lower() and function_statement != "" and len(t) - len(t.lstrip()) == len(function_statement) - len(function_statement.lstrip()):
+            elif search(r"^\W*end function\W*$", t.lower()) and function_statement != "" and len(t) - len(t.lstrip()) == len(function_statement) - len(function_statement.lstrip()):
                 self.read_write[findall(r"(\w+)", function_statement)[1]] = Function(function_statement, "\n".join(current_function_block), self.read_only + [self.read_write]).execute
                 function_statement = ""
                 current_function_block = []
                 state = ""
-            elif "function" in t.lower() and state == "":
+            elif search(r"^\W*function\W+", t.lower()) and state == "":
                 state = "function"
                 function_statement = adapt_condition(t)
             elif state == "function":
                 current_function_block.append(t)
-            elif "end loop" in t.lower() and loop_condition != "" and len(t) - len(t.lstrip()) == len(loop_condition) - len(loop_condition.lstrip()):
+            elif search(r"^\W*end loop\W*$", t.lower()) and loop_condition != "" and len(t) - len(t.lstrip()) == len(loop_condition) - len(loop_condition.lstrip()):
                 self.code.append(Loop(loop_condition, "\n".join(current_loop_block), self.read_only, self.read_write))
                 loop_condition = ""
                 current_loop_block = []
                 state = ""
-            elif "loop" in t.lower() and state == "":
+            elif search(r"^\W*loop\W+", t.lower()) and state == "":
                 state = "loop"
                 loop_condition = adapt_condition(t)
             elif state == "loop":
                 current_loop_block.append(t)
-            elif "end if" in t.lower() and len(if_conditions) != 0 and len(t) - len(t.lstrip()) == len(if_conditions[-1]) - len(if_conditions[-1].lstrip()):
+            elif search(r"^\W*end if\W*$", t.lower()) and len(if_conditions) != 0 and len(t) - len(t.lstrip()) == len(if_conditions[-1]) - len(if_conditions[-1].lstrip()):
                 if_blocks.append("\n".join(current_if_block))
                 self.code.append(Condition(if_conditions, if_blocks, "\n".join(current_else_block), self.read_only, self.read_write))
                 if_conditions = []
@@ -261,18 +261,18 @@ class Block:
                 current_else_block = []
                 if_blocks = []
                 state = ""
-            elif "else if" in t.lower() and len(if_conditions) != 0 and len(t) - len(t.lstrip()) == len(if_conditions[-1]) - len(if_conditions[-1].lstrip()):
+            elif search(r"^\W*else if\W+", t.lower()) and len(if_conditions) != 0 and len(t) - len(t.lstrip()) == len(if_conditions[-1]) - len(if_conditions[-1].lstrip()):
                 state = "if"
                 if_blocks.append("\n".join(current_if_block))
                 current_if_block = []
                 if_conditions.append(adapt_condition(t))
-            elif "else" in t.lower() and len(if_conditions) != 0 and len(t) - len(t.lstrip()) == len(if_conditions[-1]) - len(if_conditions[-1].lstrip()):
+            elif search(r"^\W*else\W*$", t.lower()) and len(if_conditions) != 0 and len(t) - len(t.lstrip()) == len(if_conditions[-1]) - len(if_conditions[-1].lstrip()):
                 state = "else"
                 if_blocks.append("\n".join(current_if_block))
                 current_if_block = []
             elif state == "else":
                 current_else_block.append(t)
-            elif "if" in t.lower() and state == "":
+            elif search(r"^\W*if\W+", t.lower()) and state == "":
                 state = "if"
                 if_conditions.append(adapt_condition(t))
             elif state == "if":
