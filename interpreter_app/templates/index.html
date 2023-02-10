@@ -150,6 +150,13 @@
     </div>
     <button id="run" onclick="run()"><b>Run</b></button>
     <script>
+
+        document.addEventListener('keydown' , event => {
+            if (event.key.toLowerCase() === 's' && event.ctrlKey) {
+                event.preventDefault();
+            }
+        });
+
         function calcHeight(value) {
             let numberOfLineBreaks = value.split('\n').length;
             let newHeight = 20 + numberOfLineBreaks * 30 + 10;
