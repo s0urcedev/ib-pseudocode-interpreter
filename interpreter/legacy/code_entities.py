@@ -1,10 +1,10 @@
 from functools import reduce
-from re import search, findall, Match
+from re import search, findall, sub
 try:
-    from tools import adapt_condition, adapt_expression, bitwise_not
+    from tools import adapt_condition, adapt_expression, __bitwise_not__, printify
     from data_structures import Array, Dictionary, Collection, Stack, Queue
 except:
-    from interpreter.legacy.tools import adapt_condition, adapt_expression, bitwise_not
+    from interpreter.legacy.tools import adapt_condition, adapt_expression, __bitwise_not__, printify
     from interpreter.legacy.data_structures import Array, Dictionary, Collection, Stack, Queue
 
 class Instruction:
@@ -61,9 +61,9 @@ class Instruction:
 
     def output(self):
         if "__stdout__" in self.read_only[0]:
-            self.read_only[0]["__stdout__"].append(str(eval(adapt_expression(self.content[0]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))))
+            self.read_only[0]["__stdout__"].append(printify(self.content[0], dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write)))
         else:
-            print(eval(adapt_expression(self.content[0]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write)))
+            print(printify(self.content[0], dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write)))
 
     def assign(self):
         match_obj = search(r"\[.*\]", self.content[0])
@@ -216,7 +216,9 @@ class Block:
         procedure_statement = ""
         current_procedure_block = []
         state = ""
-        text = text.replace("\r", "").replace("then", "")
+        text = text.replace("\r", "")
+        text = sub(r"\W+then\W*\n", "\n", text)
+        text = sub(r"//.*\n", "\n", text)
         counter = 0
         lines = text.split("\n")
         for t in lines:
@@ -301,7 +303,7 @@ class Code:
 
     def __init__(self, code):
         self.global_vars = {
-            "bitwise_not": bitwise_not,
+            "__bitwise_not__": __bitwise_not__,
             "Array": Array,
             "Dictionary": Dictionary,
             "Collection": Collection,
@@ -320,7 +322,7 @@ class CodeInternal:
 
     def __init__(self, code, stdin):
         self.global_vars = {
-            "bitwise_not": bitwise_not,
+            "__bitwise_not__": __bitwise_not__,
             "Array": Array,
             "Dictionary": Dictionary,
             "Collection": Collection,

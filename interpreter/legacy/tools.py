@@ -21,7 +21,7 @@ def adapt_expression(s):
     s = sub("<>", "!=", s)
     s = sub(" mod ", " % ", s)
     s = sub(" div ", " // ", s)
-    s = sub(r" NOT (.*)", r" bitwise_not(\1)", s)
+    s = sub(r" NOT (.*)", r" __bitwise_not__(\1)", s)
     s = sub(" AND ", " & ", s)
     s = sub(" OR ", " | ", s)
     s = sub(" XOR ", " ^ ", s)
@@ -34,5 +34,14 @@ def adapt_expression(s):
     s = sub("isEmpty", "is_empty", s)
     return s
 
-def bitwise_not(n):
+def __bitwise_not__(n):
     return int("0b" + str(bin(n))[1:].replace('0', 'a').replace('1', '0').replace('a', '1'))
+
+def printify(args, vars):
+    res = ""
+    for a in args.split(","):
+        try:
+            res += str(eval(a, vars))
+        except:
+            res += str(eval(adapt_expression(a), vars))
+    return res
