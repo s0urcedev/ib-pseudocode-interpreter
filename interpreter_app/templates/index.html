@@ -297,6 +297,8 @@
         }
 
         function run() {
+            outputTextarea.value = "";
+            outputTextarea.style.height = calcHeight(outputTextarea.value) + "px";
             fetch('', {
                 method: "POST",
                 body: JSON.stringify({
