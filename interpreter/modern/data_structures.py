@@ -16,7 +16,7 @@ class Array:
             self.body.append(None)
         self.body[index] = value
 
-    def length(self) -> int:
+    def size(self) -> int:
         return len(self.body)
 
     def __str__(self) -> str:
@@ -60,6 +60,9 @@ class Collection:
 
     def is_empty(self) -> bool:
         return len(self.body) == 0
+
+    def size(self) -> int:
+        return len(self.body)
     
     def __str__(self) -> str:
         return str(self.body)
@@ -80,6 +83,9 @@ class Stack:
 
     def is_empty(self) -> bool:
         return not len(self.body)
+
+    def size(self) -> int:
+        return len(self.body)
 
     def __str__(self) -> str:
         return str(self.body)
@@ -102,6 +108,9 @@ class Queue:
 
     def is_empty(self) -> bool:
         return (len(self.body) - self.end_index) <= 0
+
+    def size(self) -> int:
+        return len(self.body) - self.end_index
 
     def __str__(self) -> str:
         return str(self.body)
