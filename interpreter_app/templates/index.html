@@ -156,6 +156,19 @@
             return newHeight;
         }
 
+        function getTab(value, caretPosition) {
+            str = value.substring(value.substring(0, caretPosition).lastIndexOf("\n") + 1, caretPosition);
+            res = "";
+            for (let i = 0; i < str.length; i ++) {
+                if (str[i] === " ") {
+                    res += " ";
+                } else {
+                    break;
+                }
+            }
+            return res
+        }
+
         HTMLTextAreaElement.prototype.getCaretPosition = function () { //return the caret position of the textarea
             return this.selectionStart;
         };
@@ -211,6 +224,12 @@
         }
 
         codeTextarea.onkeydown = function (event) {
+            if (event.keyCode == 13) {
+                let newCaretPosition = codeTextarea.getCaretPosition() + 1 + getTab(codeTextarea.value, codeTextarea.getCaretPosition()).length;
+                codeTextarea.value = codeTextarea.value.substring(0, codeTextarea.getCaretPosition()) + "\n" + getTab(codeTextarea.value, codeTextarea.getCaretPosition()) + codeTextarea.value.substring(codeTextarea.getCaretPosition(), codeTextarea.value.length);
+                codeTextarea.setCaretPosition(newCaretPosition);
+                return false;
+            }
             if (event.keyCode == 9) {
                 let newCaretPosition = codeTextarea.getCaretPosition() + "    ".length;
                 codeTextarea.value = codeTextarea.value.substring(0, codeTextarea.getCaretPosition()) + "    " + codeTextarea.value.substring(codeTextarea.getCaretPosition(), codeTextarea.value.length);
@@ -244,6 +263,12 @@
         }
 
         inputTextarea.onkeydown = function (event) {
+            if (event.keyCode == 13) {
+                let newCaretPosition = inputTextarea.getCaretPosition() + 1 + getTab(inputTextarea.value, inputTextarea.getCaretPosition()).length;
+                inputTextarea.value = inputTextarea.value.substring(0, inputTextarea.getCaretPosition()) + "\n" + getTab(inputTextarea.value, inputTextarea.getCaretPosition()) + inputTextarea.value.substring(inputTextarea.getCaretPosition(), inputTextarea.value.length);
+                inputTextarea.setCaretPosition(newCaretPosition);
+                return false;
+            }
             if (event.keyCode == 9) {
                 let newCaretPosition = inputTextarea.getCaretPosition() + "    ".length;
                 inputTextarea.value = inputTextarea.value.substring(0, inputTextarea.getCaretPosition()) + "    " + inputTextarea.value.substring(inputTextarea.getCaretPosition(), inputTextarea.value.length);
