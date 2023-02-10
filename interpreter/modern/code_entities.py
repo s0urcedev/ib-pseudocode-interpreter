@@ -69,7 +69,7 @@ class Instruction:
     def assign(self) -> None:
         match_obj: Match | None = search(r"\[.*\]", self.content[0])
         if match_obj != None:
-            self.read_write[self.content[0][:match_obj.start()]][eval(self.content[0][match_obj.start() + 1:match_obj.end() - 1], dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))] = eval(adapt_expression(self.content[1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
+            self.read_write[self.content[0][:match_obj.start()]][eval(adapt_expression(self.content[0][match_obj.start() + 1:match_obj.end() - 1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))] = eval(adapt_expression(self.content[1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
         else:
             self.read_write[self.content[0]] = eval(adapt_expression(self.content[1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
 
