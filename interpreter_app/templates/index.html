@@ -113,13 +113,29 @@
             opacity: 80%;
         }
 
+        a {
+            color: #282a3a;
+            text-decoration: none;
+        }
+
         .link {
             display: inline-block;
-            color: #282a3a; 
-            text-decoration: underline;
+            color: #282a3a;
             font-size: 30px;
+            text-decoration: underline;
             font-family: monospace;
             margin-bottom: 20px;
+        }
+
+        .footer {
+            display: block;
+            font-family: monospace;
+            font-size: 25px;
+            line-height: 30px;
+            border-radius: 10px;
+            color: #282a3a;
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -149,6 +165,7 @@
         </div>
     </div>
     <button id="run" onclick="run()"><b>Run</b></button>
+    <span class="footer"><a href="https://github.com/s0urcedev/ib-pseudocode-interpreter"><b>IB Pseudocode Interpreter</b></a> by <a href="https://github.com/s0urcedev"><b>s0urcedev</b></a></span>
     <script>
 
         document.addEventListener('keydown' , event => {
@@ -164,11 +181,11 @@
         }
 
         function getTab(value, caretPosition) {
-            str = value.substring(value.substring(0, caretPosition).lastIndexOf("\n") + 1, caretPosition);
-            res = "";
+            str = value.substring(value.substring(0, caretPosition).lastIndexOf('\n') + 1, caretPosition);
+            res = '';
             for (let i = 0; i < str.length; i ++) {
-                if (str[i] === " ") {
-                    res += " ";
+                if (str[i] === ' ') {
+                    res += ' ';
                 } else {
                     break;
                 }
@@ -200,31 +217,31 @@
             this.focus();
         };
 
-        const codeTextarea = document.getElementById("code");
-        const inputTextarea = document.getElementById("input");
-        const outputTextarea = document.getElementById("output");
+        const codeTextarea = document.getElementById('code');
+        const inputTextarea = document.getElementById('input');
+        const outputTextarea = document.getElementById('output');
         const editor = document.querySelector('.code-editor');
         const lineNumbers = document.querySelector('.line-numbers');
         if (localStorage.getItem('code') !== undefined) {
             codeTextarea.value = localStorage.getItem('code');
-            codeTextarea.style.height = calcHeight(codeTextarea.value) + "px";
+            codeTextarea.style.height = calcHeight(codeTextarea.value) + 'px';
             const numberOfLines = codeTextarea.value.split('\n').length;
-            editor.style.gap = String(numberOfLines).length * 10 + "px";
+            editor.style.gap = String(numberOfLines).length * 10 + 'px';
             lineNumbers.innerHTML = Array(numberOfLines)
                 .fill('<span></span>')
                 .join('');
         }
         if (localStorage.getItem('input') !== undefined) {
             inputTextarea.value = localStorage.getItem('input');
-            inputTextarea.style.height = calcHeight(inputTextarea.value) + "px";
+            inputTextarea.style.height = calcHeight(inputTextarea.value) + 'px';
         }
         
 
         codeTextarea.onkeyup = function (event) {
             const numberOfLines = codeTextarea.value.split('\n').length;
             localStorage.setItem('code', codeTextarea.value);
-            codeTextarea.style.height = calcHeight(codeTextarea.value) + "px";
-            editor.style.gap = String(numberOfLines).length * 10 + "px";
+            codeTextarea.style.height = calcHeight(codeTextarea.value) + 'px';
+            editor.style.gap = String(numberOfLines).length * 10 + 'px';
             lineNumbers.innerHTML = Array(numberOfLines)
                 .fill('<span></span>')
                 .join('');
@@ -233,31 +250,31 @@
         codeTextarea.onkeydown = function (event) {
             if (event.keyCode == 13) {
                 let newCaretPosition = codeTextarea.getCaretPosition() + 1 + getTab(codeTextarea.value, codeTextarea.getCaretPosition()).length;
-                codeTextarea.value = codeTextarea.value.substring(0, codeTextarea.getCaretPosition()) + "\n" + getTab(codeTextarea.value, codeTextarea.getCaretPosition()) + codeTextarea.value.substring(codeTextarea.getCaretPosition(), codeTextarea.value.length);
+                codeTextarea.value = codeTextarea.value.substring(0, codeTextarea.getCaretPosition()) + '\n' + getTab(codeTextarea.value, codeTextarea.getCaretPosition()) + codeTextarea.value.substring(codeTextarea.getCaretPosition(), codeTextarea.value.length);
                 codeTextarea.setCaretPosition(newCaretPosition);
                 return false;
             }
             if (event.keyCode == 9) {
-                let newCaretPosition = codeTextarea.getCaretPosition() + "    ".length;
-                codeTextarea.value = codeTextarea.value.substring(0, codeTextarea.getCaretPosition()) + "    " + codeTextarea.value.substring(codeTextarea.getCaretPosition(), codeTextarea.value.length);
+                let newCaretPosition = codeTextarea.getCaretPosition() + '    '.length;
+                codeTextarea.value = codeTextarea.value.substring(0, codeTextarea.getCaretPosition()) + '    ' + codeTextarea.value.substring(codeTextarea.getCaretPosition(), codeTextarea.value.length);
                 codeTextarea.setCaretPosition(newCaretPosition);
                 return false;
             }
             if(event.keyCode == 8) {
-                if (codeTextarea.value.substring(codeTextarea.getCaretPosition() - 4, codeTextarea.getCaretPosition()) == "    ") {
+                if (codeTextarea.value.substring(codeTextarea.getCaretPosition() - 4, codeTextarea.getCaretPosition()) == '    ') {
                     let newCaretPosition = codeTextarea.getCaretPosition() - 3;
                     codeTextarea.value = codeTextarea.value.substring(0, codeTextarea.getCaretPosition() - 3) + codeTextarea.value.substring(codeTextarea.getCaretPosition(), codeTextarea.value.length);
                     codeTextarea.setCaretPosition(newCaretPosition);
                 }
             }
             if(event.keyCode == 37) {
-                if (codeTextarea.value.substring(codeTextarea.getCaretPosition() - 4, codeTextarea.getCaretPosition()) == "    ") {
+                if (codeTextarea.value.substring(codeTextarea.getCaretPosition() - 4, codeTextarea.getCaretPosition()) == '    ') {
                     let newCaretPosition = codeTextarea.getCaretPosition() - 3;
                     codeTextarea.setCaretPosition(newCaretPosition);
                 }    
             }
             if(event.keyCode == 39) {
-                if (codeTextarea.value.substring(codeTextarea.getCaretPosition() + 4, codeTextarea.getCaretPosition()) == "    ") {
+                if (codeTextarea.value.substring(codeTextarea.getCaretPosition() + 4, codeTextarea.getCaretPosition()) == '    ') {
                     let newCaretPosition = codeTextarea.getCaretPosition() + 3;
                     codeTextarea.setCaretPosition(newCaretPosition);
                 }
@@ -266,37 +283,37 @@
 
         inputTextarea.onkeyup = function (event) {
             localStorage.setItem('input', inputTextarea.value);
-            inputTextarea.style.height = calcHeight(inputTextarea.value) + "px";
+            inputTextarea.style.height = calcHeight(inputTextarea.value) + 'px';
         }
 
         inputTextarea.onkeydown = function (event) {
             if (event.keyCode == 13) {
                 let newCaretPosition = inputTextarea.getCaretPosition() + 1 + getTab(inputTextarea.value, inputTextarea.getCaretPosition()).length;
-                inputTextarea.value = inputTextarea.value.substring(0, inputTextarea.getCaretPosition()) + "\n" + getTab(inputTextarea.value, inputTextarea.getCaretPosition()) + inputTextarea.value.substring(inputTextarea.getCaretPosition(), inputTextarea.value.length);
+                inputTextarea.value = inputTextarea.value.substring(0, inputTextarea.getCaretPosition()) + '\n' + getTab(inputTextarea.value, inputTextarea.getCaretPosition()) + inputTextarea.value.substring(inputTextarea.getCaretPosition(), inputTextarea.value.length);
                 inputTextarea.setCaretPosition(newCaretPosition);
                 return false;
             }
             if (event.keyCode == 9) {
-                let newCaretPosition = inputTextarea.getCaretPosition() + "    ".length;
-                inputTextarea.value = inputTextarea.value.substring(0, inputTextarea.getCaretPosition()) + "    " + inputTextarea.value.substring(inputTextarea.getCaretPosition(), inputTextarea.value.length);
+                let newCaretPosition = inputTextarea.getCaretPosition() + '    '.length;
+                inputTextarea.value = inputTextarea.value.substring(0, inputTextarea.getCaretPosition()) + '    ' + inputTextarea.value.substring(inputTextarea.getCaretPosition(), inputTextarea.value.length);
                 inputTextarea.setCaretPosition(newCaretPosition);
                 return false;
             }
             if(event.keyCode == 8) {
-                if (inputTextarea.value.substring(inputTextarea.getCaretPosition() - 4, inputTextarea.getCaretPosition()) == "    ") {
+                if (inputTextarea.value.substring(inputTextarea.getCaretPosition() - 4, inputTextarea.getCaretPosition()) == '    ') {
                     let newCaretPosition = inputTextarea.getCaretPosition() - 3;
                     inputTextarea.value = inputTextarea.value.substring(0, inputTextarea.getCaretPosition() - 3) + inputTextarea.value.substring(inputTextarea.getCaretPosition(), inputTextarea.value.length);
                     inputTextarea.setCaretPosition(newCaretPosition);
                 }
             }
             if(event.keyCode == 37) {
-                if (inputTextarea.value.substring(inputTextarea.getCaretPosition() - 4, inputTextarea.getCaretPosition()) == "    ") {
+                if (inputTextarea.value.substring(inputTextarea.getCaretPosition() - 4, inputTextarea.getCaretPosition()) == '    ') {
                     let newCaretPosition = inputTextarea.getCaretPosition() - 3;
                     inputTextarea.setCaretPosition(newCaretPosition);
                 }    
             }
             if(event.keyCode == 39) {
-                if (inputTextarea.value.substring(inputTextarea.getCaretPosition() + 4, inputTextarea.getCaretPosition()) == "    ") {
+                if (inputTextarea.value.substring(inputTextarea.getCaretPosition() + 4, inputTextarea.getCaretPosition()) == '    ') {
                     let newCaretPosition = inputTextarea.getCaretPosition() + 3;
                     inputTextarea.setCaretPosition(newCaretPosition);
                 }
@@ -304,17 +321,17 @@
         }
 
         function run() {
-            outputTextarea.value = "";
-            outputTextarea.style.height = calcHeight(outputTextarea.value) + "px";
+            outputTextarea.value = '';
+            outputTextarea.style.height = calcHeight(outputTextarea.value) + 'px';
             fetch('', {
-                method: "POST",
+                method: 'POST',
                 body: JSON.stringify({
                     code: codeTextarea.value,
                     input: inputTextarea.value
                 })
             }).then(res => res.json()).then(data => {
-                outputTextarea.value = data["output"];
-                outputTextarea.style.height = calcHeight(outputTextarea.value) + "px";
+                outputTextarea.value = data['output'];
+                outputTextarea.style.height = calcHeight(outputTextarea.value) + 'px';
             });
         }
     </script>
