@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>IB Pseudocode Interpreter</title>
+    <link rel="stylesheet" type="text/css" href="TextareaDecorator.css">
     <style>
-        
+
+        .ldt .comment { color: #7f848e; }
+        .ldt .string { color: #98c379; }
+        .ldt .number { color: #192aa3; }
+        .ldt .keyword { color: #c678dd }
+        .ldt .defined { color: #61afef; }
+        .ldt .variable { color: #e06c75; }
+        .ldt .operator { color: #c99563; }
+        .ldt .other { color: #8198b1; }
+
         body {
             background-color: #6481a0;
             padding: 10px;
@@ -29,6 +39,7 @@
             margin-top: 5px;
             display: inline-flex;
             width: 100%;
+            padding-bottom: 20px;
         }
 
         .std-editor {
@@ -51,7 +62,7 @@
             color: #506882;
         }
 
-        #code {
+        .code {
             width: 100%;
             line-height: 30px;
             font-size: 25px;
@@ -59,8 +70,6 @@
             padding: 0;
             border: 0;
             border-radius: 10px;
-            background: #282a3a;
-            color: #8198b1;
             outline: none;
             resize: none;
         }
@@ -138,6 +147,25 @@
             margin-top: 20px;
         }
     </style>
+    <script src="Parser.js" type="text/javascript"></script>
+    <script src="TextareaDecorator.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        let parser = new Parser({
+            whitespace: /\s+/,
+            number: /0x[\dA-Fa-f]+|-?(\d+\.?\d*|\.\d+)|#[\dA-Fa-f]{3,6}/,
+            comment: /\/\*([^\*]|\*[^\/])*(\*\/?)?|(\/\/|#)[^\r\n]*/,
+            string: /"(\\.|[^"\r\n])*"?|'(\\.|[^'\r\n])*'?/,
+            defined: /(input|output|delete)(?!\w|=)/,
+            keyword: /(if|else|end|loop|while|until|from|to|then|function|procedure)(?!\w|=)/,
+            operator: /[\+\-\*\/=<>!]=?|[\(\)\{\}\[\]\.\|]|(div|mod|true|false|not|and|or|xor)(?!\w|=)/,
+            variable: /[$A-Z_a-z0-9]+/,
+            other: /\S/,
+        }, true);
+
+        window.onload = function (){
+            let codeHighlight = new TextareaDecorator(document.getElementById('code'), parser);
+        }
+    </script>
 </head>
 <body>
     <a class="link" href="syntax" target="_blank"><b>Syntax</b></a>
@@ -147,7 +175,7 @@
             <div class="line-numbers">
                 <span></span>
             </div>
-            <textarea id="code" name="code" spellcheck="false"></textarea>
+            <textarea id="code" class="code" name="code" spellcheck="false"></textarea>
         </div>
     </div>
     <div style="display: inline-flex; width: 100%; margin-top: 20px;">
@@ -196,11 +224,13 @@
         HTMLTextAreaElement.prototype.getCaretPosition = function () {
             return this.selectionStart;
         };
+
         HTMLTextAreaElement.prototype.setCaretPosition = function (position) {
             this.selectionStart = position;
             this.selectionEnd = position;
             this.focus();
         };
+
         HTMLTextAreaElement.prototype.hasSelection = function () {
             if (this.selectionStart == this.selectionEnd) {
                 return false;
@@ -208,9 +238,11 @@
                 return true;
             }
         };
+
         HTMLTextAreaElement.prototype.getSelectedText = function () {
             return this.value.substring(this.selectionStart, this.selectionEnd);
         };
+
         HTMLTextAreaElement.prototype.setSelection = function (start, end) {
             this.selectionStart = start;
             this.selectionEnd = end;
@@ -236,7 +268,6 @@
             inputTextarea.style.height = calcHeight(inputTextarea.value) + 'px';
         }
         
-
         codeTextarea.onkeyup = function (event) {
             const numberOfLines = codeTextarea.value.split('\n').length;
             localStorage.setItem('code', codeTextarea.value);
