@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>IB Pseudocode Interpreter</title>
-    <link rel="stylesheet" type="text/css" href="TextareaDecorator.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'TextareaDecorator.css' %}">
     <style>
 
         .ldt .comment { color: #7f848e; }
@@ -147,8 +147,8 @@
             margin-top: 20px;
         }
     </style>
-    <script src="Parser.js" type="text/javascript"></script>
-    <script src="TextareaDecorator.js" type="text/javascript"></script>
+    <script src="{% static 'Parser.js' %}" type="text/javascript"></script>
+    <script src="{% static 'TextareaDecorator.js' %}" type="text/javascript"></script>
     <script type="text/javascript">
         let parser = new Parser({
             whitespace: /\s+/,
