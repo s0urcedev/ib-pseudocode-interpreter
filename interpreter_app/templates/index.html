@@ -399,7 +399,7 @@
             values: /0x[\dA-Fa-f]+|-?(\d+\.?\d*|\.\d+)|#[\dA-Fa-f]{3,6}|(true|false)(?!\w|=)/,
             comment: /\/\*([^\*]|\*[^\/])*(\*\/?)?|(\/\/|#)[^\r\n]*/,
             string: /"(\\.|[^"\r\n])*"?|'(\\.|[^'\r\n])*'?/,
-            defined: /(input|output|delete)(?!\w|=)/,
+            defined: /(input|output|delete|array|dictionary|collection|stack|queue)(?!\w|=)/,
             keyword: /(if|else|end|loop|while|until|from|to|then|function|procedure|return)(?!\w|=)/,
             operator: /[\+\-\*\/=<>!,\&|%]=?|[\(\)\{\}\[\]\.\|]|(div|mod|true|false|not|and|or|xor)(?!\w|=)/,
             variable: /[$A-Z_a-z0-9]+/,
