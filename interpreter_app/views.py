@@ -17,7 +17,7 @@ def index(request: HttpRequest) -> HttpResponse:
 
 @csrf_exempt
 def syntax(request: HttpRequest) -> HttpResponse:
-    with open('static/Syntax.pdf', 'rb') as pdf:
+    with open('interpreter_app/static/Syntax.pdf', 'rb') as pdf:
         response = HttpResponse(pdf.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'inline;filename=Syntax.pdf'
         return response
