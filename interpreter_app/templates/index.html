@@ -75,13 +75,13 @@
     <style>
         .ldt .comment { color: #7f848e; }
         .ldt .string { color: #98c379; }
-        .ldt .number { color: #192aa3; }
+        .ldt .values { color: #c99563; }
         .ldt .keyword { color: #c678dd }
         .ldt .defined { color: #61afef; }
         .ldt .variable { color: #e06c75; }
-        .ldt .operator { color: #c99563; }
+        .ldt .operator { color: #56b6c2; }
         .ldt .other { color: #8198b1; }
-
+    
         body {
             background-color: #6481a0;
             padding: 10px;
@@ -396,12 +396,12 @@
     <script>
         let parser = new Parser({
             whitespace: /\s+/,
-            number: /0x[\dA-Fa-f]+|-?(\d+\.?\d*|\.\d+)|#[\dA-Fa-f]{3,6}/,
+            values: /0x[\dA-Fa-f]+|-?(\d+\.?\d*|\.\d+)|#[\dA-Fa-f]{3,6}|(true|false)(?!\w|=)/,
             comment: /\/\*([^\*]|\*[^\/])*(\*\/?)?|(\/\/|#)[^\r\n]*/,
             string: /"(\\.|[^"\r\n])*"?|'(\\.|[^'\r\n])*'?/,
             defined: /(input|output|delete)(?!\w|=)/,
             keyword: /(if|else|end|loop|while|until|from|to|then|function|procedure)(?!\w|=)/,
-            operator: /[\+\-\*\/=<>!]=?|[\(\)\{\}\[\]\.\|]|(div|mod|true|false|not|and|or|xor)(?!\w|=)/,
+            operator: /[\+\-\*\/=<>!,\&|%]=?|[\(\)\{\}\[\]\.\|]|(div|mod|true|false|not|and|or|xor)(?!\w|=)/,
             variable: /[$A-Z_a-z0-9]+/,
             other: /\S/,
         }, true);
