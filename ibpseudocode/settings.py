@@ -10,6 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import mimetypes
+
+mimetypes.add_type("type/html", ".html", True)
+mimetypes.add_type("type/css", ".css", True)
+mimetypes.add_type("text/javascript", ".js", True)
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
