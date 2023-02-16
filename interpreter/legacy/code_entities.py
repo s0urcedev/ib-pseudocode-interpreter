@@ -16,13 +16,14 @@ class Instruction:
             "input": self.input,
             "output": self.output,
             "assign": self.assign,
-            "delete": self.delete,
-            "run": self.run,
+            "create": self.create,
             "array": self.create_array,
             "dictionary": self.create_dictionary,
             "collection": self.create_collection,
             "stack": self.create_stack,
-            "queue": self.create_queue
+            "queue": self.create_queue,
+            "delete": self.delete,
+            "run": self.run
         }
         if text.find("=") != -1 and all([i not in text.lower() for i in self.INSTRUCTIONS]):
             instruction = "assign"
@@ -72,11 +73,23 @@ class Instruction:
         else:
             self.read_write[self.content[0]] = eval(adapt_expression(self.content[1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
 
-    def delete(self):
-        del self.read_write[self.content[0]]
-
-    def run(self):
-        eval(adapt_expression(self.content[0]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
+    def create(self):
+        if "array" in self.content[0].lower():
+            self.read_write[self.content[0][self.content[0].lower().find("array") + 6:].strip()] = Array([])
+        elif "dictionary" in self.content[0].lower():
+            self.read_write[self.content[0][self.content[0].lower().find("dictionary") + 11:].strip()] = Dictionary({})
+        elif "collection" in self.content[0].lower():
+            self.read_write[self.content[0][self.content[0].lower().find("collection") + 11:].strip()] = Collection([])
+        elif "stack" in self.content[0].lower():
+            self.read_write[self.content[0][self.content[0].lower().find("stack") + 6:].strip()] = Stack([])
+        elif "queue" in self.content[0].lower():
+            self.read_write[self.content[0][self.content[0].lower().find("queue") + 6:].strip()] = Queue([])
+        elif "boolean" in self.content[0].lower():
+            self.read_write[self.content[0][self.content[0].lower().find("boolean") + 8:].strip()] = False
+        elif "number" in self.content[0].lower():
+            self.read_write[self.content[0][self.content[0].lower().find("number") + 7:].strip()] = 0
+        elif "string" in self.content[0].lower():
+            self.read_write[self.content[0][self.content[0].lower().find("string") + 7:].strip()] = ""
 
     def create_array(self):
         self.read_write[self.content[0]] = Array([])
@@ -92,6 +105,12 @@ class Instruction:
 
     def create_queue(self):
         self.read_write[self.content[0]] = Queue([])
+
+    def delete(self):
+        del self.read_write[self.content[0]]
+
+    def run(self):
+        eval(adapt_expression(self.content[0]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
 
     def execute(self):
         self.INSTRUCTIONS[self.instruction]()
