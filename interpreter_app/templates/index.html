@@ -393,7 +393,7 @@
     <script>
         let parser = new Parser({
             whitespace: /\s+/,
-            values: /0x[\dA-Fa-f]+|-?(\d+\.?\d*|\.\d+)|#[\dA-Fa-f]{3,6}|(True|False)(?!\w|=)/,
+            values: /0x[\dA-Fa-f]+|-?(\d+\.?\d*|\.\d+)|#[\dA-Fa-f]{3,6}|(TRUE|FALSE)(?!\w|=)/,
             comment: /\/\*([^\*]|\*[^\/])*(\*\/?)?|(\/\/|#)[^\r\n]*/,
             string: /"(\\.|[^"\r\n])*"?|'(\\.|[^'\r\n])*'?/,
             defined: /(input|output|delete|array|dictionary|collection|stack|queue|INPUT|OUTPUT|DELETE|ARRAY|DICTIONARY|COLLECTION|STACK|QUEUE|Array|Dictionary|Collection|Stack|Queue)(?!\w|=)/,
