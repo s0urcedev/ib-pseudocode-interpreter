@@ -11,14 +11,14 @@ def adapt_condition(s: str) -> str:
     s = sub(" AND", " and ", s)
     s = sub(" OR ", " or ", s)
     s = sub(" XOR ", " ^ ", s)
-    s = sub(r"(\W+)TRUE(\W+)", r"\1True\2", s)
-    s = sub(r"^TRUE(\W+)", r"True\1", s)
-    s = sub(r"(\W+)TRUE$", r"\1True", s)
-    s = sub(r"^TRUE$", "True", s)
-    s = sub(r"(\W+)FALSE(\W+)", r"\1False\2", s)
-    s = sub(r"^FALSE(\W+)", r"False\1", s)
-    s = sub(r"(\W+)FALSE$", r"\1False", s)
-    s = sub(r"^FALSE$", "False", s)
+    s = sub(r"(\W+)true(\W+)", r"\1True\2", s)
+    s = sub(r"^true(\W+)", r"True\1", s)
+    s = sub(r"(\W+)true$", r"\1True", s)
+    s = sub(r"^true$", "True", s)
+    s = sub(r"(\W+)false(\W+)", r"\1False\2", s)
+    s = sub(r"^false(\W+)", r"False\1", s)
+    s = sub(r"(\W+)false$", r"\1False", s)
+    s = sub(r"^false$", "False", s)
     s = sub(r"^\s*\[(.*)\]", r"Array([\1])", s)
     s = sub(r"^\s*\{(.*)\}", r"Dictionary({\1})", s)
     s = sub(".addItem", ".add_item", s)
@@ -38,14 +38,14 @@ def adapt_expression(s: str) -> str:
     s = sub(" AND ", " & ", s)
     s = sub(" OR ", " | ", s)
     s = sub(" XOR ", " ^ ", s)
-    s = sub(r"(\W+)TRUE(\W+)", r"\1True\2", s)
-    s = sub(r"^TRUE(\W+)", r"True\1", s)
-    s = sub(r"(\W+)TRUE$", r"\1True", s)
-    s = sub(r"^TRUE$", "True", s)
-    s = sub(r"(\W+)FALSE(\W+)", r"\1False\2", s)
-    s = sub(r"^FALSE(\W+)", r"False\1", s)
-    s = sub(r"(\W+)FALSE$", r"\1False", s)
-    s = sub(r"^FALSE$", "False", s)
+    s = sub(r"(\W+)true(\W+)", r"\1True\2", s)
+    s = sub(r"^true(\W+)", r"True\1", s)
+    s = sub(r"(\W+)true$", r"\1True", s)
+    s = sub(r"^true$", "True", s)
+    s = sub(r"(\W+)false(\W+)", r"\1False\2", s)
+    s = sub(r"^false(\W+)", r"False\1", s)
+    s = sub(r"(\W+)false$", r"\1False", s)
+    s = sub(r"^false$", "False", s)
     s = sub(r"^\s*\[(.*)\]", r"Array([\1])", s)
     s = sub(r"^\s*\{(.*)\}", r"Dictionary({\1})", s)
     s = sub(".addItem", ".add_item", s)
@@ -68,9 +68,9 @@ def printify(args: str, vars: dict[Any, Any]) -> str:
             current = eval(adapt_expression(a), vars)
         if isinstance(current, bool):
             if current:
-                res += "TRUE"
+                res += "true"
             else:
-                res += "FALSE"
+                res += "false"
         else:
             res += str(current)
     return res
