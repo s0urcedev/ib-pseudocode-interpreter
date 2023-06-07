@@ -237,6 +237,7 @@ class Block:
         state = ""
         text = text.replace("\r", "")
         text = sub(r"\W+then\W*\n", "\n", text)
+        text = sub(r"loop\W+for\W+", "loop ", text)
         text = sub(r"//.*\n", "\n", text)
         counter = 0
         lines = text.split("\n")
