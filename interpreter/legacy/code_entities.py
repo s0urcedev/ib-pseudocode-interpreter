@@ -27,7 +27,7 @@ class Instruction:
         }
         if text.find("=") != -1 and all([i not in text.lower() for i in self.INSTRUCTIONS]):
             instruction = "assign"
-            content = (text[:text.find("=")].strip(), text[text.find("=") + 2:].strip())
+            content = (text[:text.find("=")].strip(), text[text.find("=") + 1:].strip())
         else:
             instruction = text[:text.find(" ")].lower()
             content = (text[text.find(" ") + 1:].strip(), "")

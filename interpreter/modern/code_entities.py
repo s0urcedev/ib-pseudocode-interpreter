@@ -28,7 +28,7 @@ class Instruction:
         }
         if text.find("=") != -1 and all([i not in text.lower() for i in self.INSTRUCTIONS]):
             instruction: str = "assign"
-            content: tuple[str, str] = (text[:text.find("=")].strip(), text[text.find("=") + 2:].strip())
+            content: tuple[str, str] = (text[:text.find("=")].strip(), text[text.find("=") + 1:].strip())
         else:
             instruction: str = text[:text.find(" ")].lower()
             content: tuple[str, str] = (text[text.find(" ") + 1:].strip(), "")
@@ -68,7 +68,7 @@ class Instruction:
             print(printify(self.content[0], dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write)))
 
     def assign(self) -> None:
-        match_obj: Match | None = search(r"\[.*\]", self.content[0])
+        match_obj: Match[str] | None = search(r"\[.*\]", self.content[0])
         if match_obj != None:
             self.read_write[self.content[0][:match_obj.start()]][eval(adapt_expression(self.content[0][match_obj.start() + 1:match_obj.end() - 1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))] = eval(adapt_expression(self.content[1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
         else:
