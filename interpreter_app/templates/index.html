@@ -78,7 +78,8 @@
         .ldt .values { color: #c99563; }
         .ldt .keyword { color: #c678dd; }
         .ldt .defined { color: #61afef; }
-        .ldt .datatypes { color: #e2c07b; }
+        .ldt .method { color: #61afef; }
+        .ldt .datatype { color: #e2c07b; }
         .ldt .variable { color: #e06c75; }
         .ldt .operator { color: #56b6c2; }
         .ldt .other { color: #8198b1; }
@@ -397,9 +398,10 @@
             values: /0x[\dA-Fa-f]+|-?(\d+\.?\d*|\.\d+)|#[\dA-Fa-f]{3,6}|(true|false)(?!\w|=)/,
             comment: /\/\*([^\*]|\*[^\/])*(\*\/?)?|(\/\/|#)[^\r\n]*/,
             string: /"(\\.|[^"\r\n])*"?|'(\\.|[^'\r\n])*'?/,
-            defined: /(input|output|create|delete|size|addItem|getNext|resetNext|hasNext|isEmpty|push|pop|enqueue|dequeue)(?!\w|=)/,
-            datatypes: /(array|dictionary|collection|stack|queue|boolean|number|string|INPUT|OUTPUT|DELETE|ARRAY|DICTIONARY|COLLECTION|STACK|QUEUE|BOOLEAN|NUMBER|STRING|Array|Dictionary|Collection|Stack|Queue|Boolean|Number|String)(?!\w|=)/,
-            keyword: /(if|else|end|loop|for|while|until|from|to|continue|break|then|function|procedure|return|IF|ELSE|END|LOOP|WHILE|UNTIL|FROM|TO|CONTINUE|BREAK|THEN|FUNCTION|PROCEDURE|RETURN)(?!\w|=)/,
+            defined: /(input|output|create|delete)(?!\w|=)/i,
+            method: /(size|addItem|getNext|resetNext|hasNext|isEmpty|push|pop|enqueue|dequeue)(?!\w|=)/,
+            datatype: /(array|dictionary|collection|stack|queue|boolean|number|string)(?!\w|=)/i,
+            keyword: /(if|else|end|loop|for|while|until|from|to|continue|break|then|function|procedure|return)(?!\w|=)/i,
             operator: /[\+\-\*\/=<>!,\&|%]=?|[\(\)\{\}\[\]\.\|]|(div|mod|NOT|AND|OR|XOR)(?!\w|=)/,
             variable: /[$A-Z_a-z0-9]+/,
             other: /\S/,
