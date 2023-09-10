@@ -43,6 +43,7 @@ class Instruction:
             self.content: tuple[str, str] = (text.strip(), "")
 
     def input(self) -> None:
+        text: str
         if "__stdin__" in self.read_only[0]:
             try:
                 while True:
@@ -56,13 +57,21 @@ class Instruction:
                 while True:
                     text = input()
                     if text != "":
-                            break
+                        break
             except:
                 raise Exception("Not all inputs are given")
+        text = text.strip()
         try:
             self.read_write[self.content[0]] = int(text)
         except:
-            self.read_write[self.content[0]] = text
+            if text in ["true", "false"]:
+                self.read_write[self.content[0]] = (text == "true")
+            elif text[0] == "[" and text[-1] == "]":
+                self.read_write[self.content[0]] = Array(eval(text))
+            elif text[0] == "{" and text[-1] == "}":
+                self.read_write[self.content[0]] = Dictionary(eval(text))
+            else:
+                self.read_write[self.content[0]] = text
 
     def output(self) -> None:
         if "__stdout__" in self.read_only[0]:
