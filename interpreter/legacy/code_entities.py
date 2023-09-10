@@ -22,6 +22,9 @@ class Instruction:
             "collection": self.create_collection,
             "stack": self.create_stack,
             "queue": self.create_queue,
+            "boolean": self.create_boolean,
+            "number": self.create_number,
+            "string": self.create_string,
             "delete": self.delete,
             "run": self.run
         }
@@ -105,6 +108,15 @@ class Instruction:
 
     def create_queue(self):
         self.read_write[self.content[0]] = Queue([])
+
+    def create_boolean(self):
+        self.read_write[self.content[0]] = False
+
+    def create_number(self):
+        self.read_write[self.content[0]] = 0
+
+    def create_string(self):
+        self.read_write[self.content[0]] = ""
 
     def delete(self):
         del self.read_write[self.content[0]]
