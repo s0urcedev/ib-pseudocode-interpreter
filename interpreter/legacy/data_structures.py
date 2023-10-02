@@ -24,14 +24,14 @@ class Array:
 
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
-        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
-        s = sub(r"^true$", "True", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
-        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
-        s = sub(r"^false$", "False", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"^True$", "true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"^False$", "false", s)
         return s
 
 class Dictionary:
@@ -47,14 +47,14 @@ class Dictionary:
 
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
-        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
-        s = sub(r"^true$", "True", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
-        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
-        s = sub(r"^false$", "False", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"^True$", "true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"^False$", "false", s)
         return s
 
 class Collection:
@@ -90,15 +90,15 @@ class Collection:
     
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
-        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
-        s = sub(r"^true$", "True", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
-        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
-        s = sub(r"^false$", "False", s)
-        s = sub(r"^\s*\[(.*)\]", r"\{\1\}", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"^True$", "true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"^False$", "false", s)
+        s = sub(r"^\s*\[(.*)\]", r"{\1}", s)
         return s
 
 class Stack:
@@ -126,14 +126,14 @@ class Stack:
 
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
-        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
-        s = sub(r"^true$", "True", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
-        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
-        s = sub(r"^false$", "False", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"^True$", "true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"^False$", "false", s)
         return s
     
 class Queue:
@@ -163,12 +163,12 @@ class Queue:
 
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
-        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
-        s = sub(r"^true$", "True", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
-        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
-        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
-        s = sub(r"^false$", "False", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"^True$", "true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"^False$", "false", s)
         return s
