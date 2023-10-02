@@ -1,3 +1,5 @@
+from re import sub
+
 class Array:
 
     def __init__(self, body):
@@ -21,7 +23,16 @@ class Array:
         return len(self.body)
 
     def __str__(self):
-        return str(self.body)
+        s = str(self.body)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
+        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
+        s = sub(r"^true$", "True", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
+        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
+        s = sub(r"^false$", "False", s)
+        return s
 
 class Dictionary:
 
@@ -35,7 +46,16 @@ class Dictionary:
         self.body[key] = value
 
     def __str__(self):
-        return str(self.body)
+        s = str(self.body)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
+        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
+        s = sub(r"^true$", "True", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
+        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
+        s = sub(r"^false$", "False", s)
+        return s
 
 class Collection:
 
@@ -46,20 +66,20 @@ class Collection:
             self.body = body
         self.index = 0
 
-    def add_item(self, item):
+    def addItem(self, item):
         self.body.append(item)
 
-    def get_next(self):
+    def getNext(self):
         self.index += 1
         return self.body[self.index - 1]
 
-    def reset_next(self):
+    def resetNext(self):
         self.index = 0
 
-    def has_next(self):
+    def hasNext(self):
         return self.index < len(self.body)
 
-    def is_empty(self):
+    def isEmpty(self):
         return len(self.body) == 0
 
     def size(self):
@@ -69,7 +89,17 @@ class Collection:
         return len(self.body)
     
     def __str__(self):
-        return str(self.body)
+        s = str(self.body)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
+        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
+        s = sub(r"^true$", "True", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
+        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
+        s = sub(r"^false$", "False", s)
+        s = sub(r"^\s*\[(.*)\]", r"\{\1\}", s)
+        return s
 
 class Stack:
 
@@ -85,7 +115,7 @@ class Stack:
     def pop(self):
         return self.body.pop()
 
-    def is_empty(self):
+    def isEmpty(self):
         return not len(self.body)
     
     def size(self):
@@ -95,7 +125,16 @@ class Stack:
         return len(self.body)
 
     def __str__(self):
-        return str(self.body)
+        s = str(self.body)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
+        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
+        s = sub(r"^true$", "True", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
+        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
+        s = sub(r"^false$", "False", s)
+        return s
     
 class Queue:
 
@@ -113,7 +152,7 @@ class Queue:
         self.end_index += 1
         return self.body[self.end_index - 1]
 
-    def is_empty(self):
+    def isEmpty(self):
         return (len(self.body) - self.end_index) <= 0
     
     def size(self):
@@ -123,4 +162,13 @@ class Queue:
         return len(self.body) - self.end_index
 
     def __str__(self):
-        return str(self.body)
+        s = str(self.body)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1True\2", s)
+        s = sub(r"^true([^[^a-zA-Z0-9\]})+\-*/_]+)", r"True\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)true$", r"\1True", s)
+        s = sub(r"^true$", "True", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false([^[^a-zA-Z0-9\[{(+\-*/_]+)", r"\1False\2", s)
+        s = sub(r"^false([^[^a-zA-Z0-9\]})+\-*/_]+)", r"False\1", s)
+        s = sub(r"([^[^a-zA-Z0-9\]})+\-*/_]+)false$", r"\1False", s)
+        s = sub(r"^false$", "False", s)
+        return s
