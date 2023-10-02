@@ -24,13 +24,13 @@ class Array:
 
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
-        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", s)
         s = sub(r"^True$", "true", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
-        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", s)
         s = sub(r"^False$", "false", s)
         return s
 
@@ -47,13 +47,13 @@ class Dictionary:
 
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
-        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", s)
         s = sub(r"^True$", "true", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
-        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", s)
         s = sub(r"^False$", "false", s)
         return s
 
@@ -90,13 +90,13 @@ class Collection:
     
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
-        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", s)
         s = sub(r"^True$", "true", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
-        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", s)
         s = sub(r"^False$", "false", s)
         s = sub(r"^\s*\[(.*)\]", r"{\1}", s)
         return s
@@ -126,13 +126,13 @@ class Stack:
 
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
-        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", s)
         s = sub(r"^True$", "true", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
-        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", s)
         s = sub(r"^False$", "false", s)
         return s
     
@@ -163,12 +163,12 @@ class Queue:
 
     def __str__(self):
         s = str(self.body)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1true\2", s)
-        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"]+)", r"true\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)True$", r"\1true", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", s)
+        s = sub(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", s)
         s = sub(r"^True$", "true", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False([^a-zA-Z0-9\[{(+\-*/_\"]+)", r"\1false\2", s)
-        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"]+)", r"false\1", s)
-        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"]+)False$", r"\1false", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1false\2", s)
+        s = sub(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", s)
+        s = sub(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", s)
         s = sub(r"^False$", "false", s)
         return s
