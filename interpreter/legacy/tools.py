@@ -19,7 +19,7 @@ def adapt_condition(s):
     s = sub(r"([^[^a-zA-Z0-9\[\]{}()+\-*/_]+)false$", r"\1False", s)
     s = sub(r"^false$", "False", s)
     s = sub(r"^\s*\[(.*)\]", r"Array([\1])", s)
-    s = sub(r"^\s*\{(.*)\}", r"Dictionary({\1})", s)
+    s = sub(r"^\s*\{(.*)\}", r"Collection([\1])", s)
     s = sub(".addItem", ".add_item", s)
     s = sub(".getNext", ".get_next", s)
     s = sub(".resetNext", ".reset_next", s)

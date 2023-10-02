@@ -17,6 +17,9 @@ class Array:
     def size(self):
         return len(self.body)
 
+    def length(self):
+        return len(self.body)
+
     def __str__(self):
         return str(self.body)
 
@@ -61,6 +64,9 @@ class Collection:
 
     def size(self):
         return len(self.body)
+
+    def length(self):
+        return len(self.body)
     
     def __str__(self):
         return str(self.body)
@@ -83,6 +89,9 @@ class Stack:
         return not len(self.body)
     
     def size(self):
+        return len(self.body)
+    
+    def length(self):
         return len(self.body)
 
     def __str__(self):
@@ -108,6 +117,9 @@ class Queue:
         return (len(self.body) - self.end_index) <= 0
     
     def size(self):
+        return len(self.body) - self.end_index
+    
+    def length(self):
         return len(self.body) - self.end_index
 
     def __str__(self):
