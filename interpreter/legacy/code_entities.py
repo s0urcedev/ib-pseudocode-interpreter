@@ -258,7 +258,6 @@ class Block:
         text = sub(r"//.*\n", "\n", text)
         counter = 0
         lines = text.split("\n")
-        t
         for t in lines:
             if search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*//", t.strip()):
                 continue
