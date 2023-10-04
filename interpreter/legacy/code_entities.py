@@ -248,53 +248,63 @@ class Block:
         current_else_block = []
         if_conditions = []
         if_blocks = []
-        loop_condition = ""
-        current_loop_block = []
-        function_statement = ""
-        current_function_block = []
-        procedure_statement = ""
-        current_procedure_block = []
+        current_statement = ""
+        current_block = []
         state = ""
+        state_difference = 0
         text = text.replace("\r", "")
         text = sub(r"[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+then[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*\n", "\n", text)
         text = sub(r"loop[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+for[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", "loop ", text)
         text = sub(r"//.*\n", "\n", text)
         counter = 0
         lines = text.split("\n")
+        t
         for t in lines:
             if search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*//", t.strip()):
                 continue
-            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end procedure[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and procedure_statement != "" and len(t) - len(t.lstrip()) == len(procedure_statement) - len(procedure_statement.lstrip()):
-                self.read_write[findall(r"(\w+)", procedure_statement)[1]] = Procedure(procedure_statement, "\n".join(current_procedure_block), self.read_only + [self.read_write]).execute
-                procedure_statement = ""
-                current_procedure_block = []
+            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end procedure[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and state == "procedure" and state_difference == 0:
+                self.read_write[findall(r"(\w+)", current_statement)[1]] = Procedure(current_statement, "\n".join(current_block), self.read_only + [self.read_write]).execute
+                current_statement = ""
+                current_block = []
                 state = ""
             elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*procedure[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()) and state == "":
                 state = "procedure"
-                procedure_statement = adapt_condition(t)
+                current_statement = adapt_condition(t)
             elif state == "procedure":
-                current_procedure_block.append(t)
-            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end function[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and function_statement != "" and len(t) - len(t.lstrip()) == len(function_statement) - len(function_statement.lstrip()):
-                self.read_write[findall(r"(\w+)", function_statement)[1]] = Function(function_statement, "\n".join(current_function_block), self.read_only + [self.read_write]).execute
-                function_statement = ""
-                current_function_block = []
+                if search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end procedure[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()):
+                    state_difference -= 1
+                elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*procedure[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()):
+                    state_difference += 1
+                current_block.append(t)
+            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end function[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and state == "function" and state_difference == 0:
+                self.read_write[findall(r"(\w+)", current_statement)[1]] = Function(current_statement, "\n".join(current_block), self.read_only + [self.read_write]).execute
+                current_statement = ""
+                current_block = []
                 state = ""
             elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*function[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()) and state == "":
                 state = "function"
-                function_statement = adapt_condition(t)
+                current_statement = adapt_condition(t)
             elif state == "function":
-                current_function_block.append(t)
-            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end loop[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and loop_condition != "" and len(t) - len(t.lstrip()) == len(loop_condition) - len(loop_condition.lstrip()):
-                self.code.append(Loop(loop_condition, "\n".join(current_loop_block), self.read_only, self.read_write))
-                loop_condition = ""
-                current_loop_block = []
+                if search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end function[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()):
+                    state_difference -= 1
+                elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*function[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()):
+                    state_difference += 1
+                current_block.append(t)
+            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end loop[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and state == "loop" and state_difference == 0:
+                self.code.append(Loop(current_statement, "\n".join(current_block), self.read_only, self.read_write))
+                current_statement = ""
+                current_block = []
                 state = ""
             elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*loop[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()) and state == "":
                 state = "loop"
-                loop_condition = adapt_condition(t)
+                current_statement = adapt_condition(t)
             elif state == "loop":
-                current_loop_block.append(t)
-            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end if[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and len(if_conditions) != 0 and len(t) - len(t.lstrip()) == len(if_conditions[-1]) - len(if_conditions[-1].lstrip()):
+                if search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end loop[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()):
+                    state_difference -= 1
+                elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*loop[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()):
+                    state_difference += 1
+                current_block.append(t)
+            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end if[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and (state == "if" or state == "else") and state_difference == 0:
                 if_blocks.append("\n".join(current_if_block))
                 self.code.append(Condition(if_conditions, if_blocks, "\n".join(current_else_block), self.read_only, self.read_write))
                 if_conditions = []
@@ -302,21 +312,29 @@ class Block:
                 current_else_block = []
                 if_blocks = []
                 state = ""
-            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*else if[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()) and len(if_conditions) != 0 and len(t) - len(t.lstrip()) == len(if_conditions[-1]) - len(if_conditions[-1].lstrip()):
+            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*else if[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()) and state == "if" and state_difference == 0:
                 state = "if"
                 if_blocks.append("\n".join(current_if_block))
                 current_if_block = []
                 if_conditions.append(adapt_condition(t))
-            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*else[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and len(if_conditions) != 0 and len(t) - len(t.lstrip()) == len(if_conditions[-1]) - len(if_conditions[-1].lstrip()):
+            elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*else[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()) and state == "if" and state_difference == 0:
                 state = "else"
                 if_blocks.append("\n".join(current_if_block))
                 current_if_block = []
             elif state == "else":
+                if search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end if[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()):
+                    state_difference -= 1
+                elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*else[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()):
+                    state_difference += 1
                 current_else_block.append(t)
             elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*if[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()) and state == "":
                 state = "if"
                 if_conditions.append(adapt_condition(t))
             elif state == "if":
+                if search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*end if[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*$", t.lower()):
+                    state_difference -= 1
+                elif search(r"^[^a-zA-Z0-9\[\]{}()+\-*/_\"\']*if[^a-zA-Z0-9\[\]{}()+\-*/_\"\']+", t.lower()):
+                    state_difference += 1
                 current_if_block.append(t)
             elif t.strip() != "":
                 self.code.append(Instruction(t.strip(), self.read_only, self.read_write))
