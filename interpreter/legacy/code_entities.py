@@ -390,14 +390,21 @@ class CodeInternal:
             "__stdin__": stdin.replace("\r", "").split("\n")[::-1],
             "__stdout__": []
         }
-        self.global_block = Block(code, [self.global_vars], {})
+        self.parsing_err = ""
+        try:
+            self.global_block = Block(code, [self.global_vars], {})
+        except Exception as exc:
+            self.parsing_err = str(exc)
 
     def run(self):
-        try:
-            self.global_block.execute()
-            return "\n".join(self.global_vars["__stdout__"])
-        except Exception as exc:
-            return str(exc)
+        if self.parsing_err == "":
+            try:
+                self.global_block.execute()
+                return "\n".join(self.global_vars["__stdout__"])
+            except Exception as exc:
+                return str(exc)
+        else:
+            return self.parsing_err
     
     def __str__(self):
         return f"{'{'} global_vars: {self.global_vars}, global_blocks: {self.global_block} {'}'}"
