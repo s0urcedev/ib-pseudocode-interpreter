@@ -338,6 +338,8 @@ class Block:
             elif t.strip() != "":
                 self.code.append(Instruction(t.strip(), self.read_only, self.read_write))
             counter += 1
+        if state != "":
+            raise Exception(f"Some end {state if state != 'else' else 'if'} is missed")
 
     def execute(self):
         for c in self.code:
