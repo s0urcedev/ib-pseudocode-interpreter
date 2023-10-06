@@ -67,7 +67,7 @@ class Instruction:
             elif text[0] == "[" and text[-1] == "]":
                 self.read_write[self.content[0]] = Array(eval(text))
             elif text[0] == "{" and text[-1] == "}":
-                self.read_write[self.content[0]] = Collection(eval(text))
+                self.read_write[self.content[0]] = Collection(eval(f"[{text[1:-1]}]"))
             else:
                 self.read_write[self.content[0]] = text
 
