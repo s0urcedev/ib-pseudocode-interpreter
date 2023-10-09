@@ -67,7 +67,7 @@ def printify(args, vars):
             comma_indexes.append(index)
     res = ""
     current = ""
-    for arg in [args[:comma_indexes[i]] if i == 0 else args[comma_indexes[i - 1] + 1:] if i == len(comma_indexes) else args[comma_indexes[i - 1] + 1:comma_indexes[i]] for i in range(0, len(comma_indexes) + 1)]:
+    for arg in args if len(comma_indexes) == 0 else [args[:comma_indexes[i]] if i == 0 else args[comma_indexes[i - 1] + 1:] if i == len(comma_indexes) else args[comma_indexes[i - 1] + 1:comma_indexes[i]] for i in range(0, len(comma_indexes) + 1)]:
         try:
             current = eval(arg, vars)
         except:
