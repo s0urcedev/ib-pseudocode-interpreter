@@ -59,17 +59,23 @@ class Instruction:
             except:
                 raise Exception("Not all inputs are given")
         text = text.strip()
+        value = None
         try:
-            self.read_write[self.content[0]] = int(text)
+            value = int(text)
         except:
             if text in ["true", "false"]:
-                self.read_write[self.content[0]] = (text == "true")
+                value = (text == "true")
             elif text[0] == "[" and text[-1] == "]":
-                self.read_write[self.content[0]] = Array(eval(text))
+                value = Array(eval(text))
             elif text[0] == "{" and text[-1] == "}":
-                self.read_write[self.content[0]] = Collection(eval(f"[{text[1:-1]}]"))
+                value = Collection(eval(f"[{text[1:-1]}]"))
             else:
-                self.read_write[self.content[0]] = text
+                value = text
+        match_obj = search(r"\[.*\]", self.content[0])
+        if match_obj != None:
+            self.read_write[self.content[0][:match_obj.start()]][eval(adapt_expression(self.content[0][match_obj.start() + 1:match_obj.end() - 1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))] = value
+        else:
+            self.read_write[self.content[0]] = value
 
     def output(self):
         if "__stdout__" in self.read_only[0]:
