@@ -65,14 +65,17 @@ class Instruction:
         try:
             value = int(text)
         except:
-            if text in ["true", "false"]:
-                value = (text == "true")
-            elif text[0] == "[" and text[-1] == "]":
-                value = Array(eval(text))
-            elif text[0] == "{" and text[-1] == "}":
-                value = Collection(eval(f"[{text[1:-1]}]"))
-            else:
-                value = text
+            try:
+                value = float(text)
+            except:
+                if text in ["true", "false"]:
+                    value = (text == "true")
+                elif text[0] == "[" and text[-1] == "]":
+                    value = Array(eval(text))
+                elif text[0] == "{" and text[-1] == "}":
+                    value = Collection(eval(f"[{text[1:-1]}]"))
+                else:
+                    value = text
         match_obj: Match[str] | None = search(r"\[.*\]", self.content[0])
         if match_obj != None:
             self.read_write[self.content[0][:match_obj.start()]][eval(adapt_expression(self.content[0][match_obj.start() + 1:match_obj.end() - 1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))] = value
