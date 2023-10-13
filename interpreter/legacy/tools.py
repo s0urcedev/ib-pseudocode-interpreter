@@ -59,21 +59,19 @@ def __bitwise_not__(number):
 
 def printify(args, vars) -> str:
     comma_indexes = []
-    inside = False
     state = ""
     for index in range(0, len(args)):
         if args[index] in state:
-            inside = not inside
             state = ""
-        elif args[index] == '"' and not inside:
+        elif args[index] == '"' and state == "":
             state = '""'
-        elif args[index] == '(' and not inside:
+        elif args[index] == '(' and state == "":
             state = '()'
-        elif args[index] == '[' and not inside:
+        elif args[index] == '[' and state == "":
             state = '[]'
-        elif args[index] == '{' and not inside:
+        elif args[index] == '{' and state == "":
             state = '{}'
-        elif args[index] == "," and not inside:
+        elif args[index] == "," and state == "":
             comma_indexes.append(index)
     res = ""
     current = ""
