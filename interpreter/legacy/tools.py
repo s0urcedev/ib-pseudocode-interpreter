@@ -57,13 +57,23 @@ def adapt_expression(string):
 def __bitwise_not__(number):
     return int("0b" + str(bin(number))[2:].replace('0', 'a').replace('1', '0').replace('a', '1'), 2)
 
-def printify(args, vars):
+def printify(args, vars) -> str:
     comma_indexes = []
-    inside_quotes = False
+    inside = False
+    state = ""
     for index in range(0, len(args)):
-        if args[index] == '"':
-            inside_quotes = not inside_quotes
-        elif args[index] == "," and not inside_quotes:
+        if args[index] in state:
+            inside = not inside
+            state = ""
+        elif args[index] == '"' and not inside:
+            state = '""'
+        elif args[index] == '(' and not inside:
+            state = '()'
+        elif args[index] == '[' and not inside:
+            state = '[]'
+        elif args[index] == '{' and not inside:
+            state = '{}'
+        elif args[index] == "," and not inside:
             comma_indexes.append(index)
     res = ""
     current = ""
