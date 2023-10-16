@@ -11,8 +11,8 @@ def replace_ignore_quotes(pattern, replacement, string):
     return sub(r"(\"[^\"]*\")|" + pattern, lambda x: x.group(1) if x.group(1) else replacement.replace("\\1", "" if len(x.groups()) < 2 else x.group(2)).replace("\\2", "" if len(x.groups()) < 3 else x.group(3)), string)
 
 def adapt_condition(string):
-    string = replace_ignore_quotes(r"([\s\w]=)", r"\1=", string)
-    string = replace_ignore_quotes(" <> ", " != ", string)
+    string = replace_ignore_quotes(r"([\sa-zA-Z0-9\]})]=)", r"\1=", string)
+    string = replace_ignore_quotes(r"([\sa-zA-Z0-9\]})])<>", r"\1!=", string)
     string = replace_ignore_quotes(" mod ", "%", string)
     string = replace_ignore_quotes(" div ", "//", string)
     string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\'])+NOT ", r"\1not ", string)
@@ -33,8 +33,8 @@ def adapt_condition(string):
     return string
 
 def adapt_expression(string):
-    string = replace_ignore_quotes(r"([\s\w]=)", r"\1=", string)
-    string = replace_ignore_quotes(" <> ", " != ", string)
+    string = replace_ignore_quotes(r"([\sa-zA-Z0-9\]})]=)", r"\1=", string)
+    string = replace_ignore_quotes(r"([\sa-zA-Z0-9\]})])<>", r"\1!=", string)
     string = replace_ignore_quotes(" mod ", " % ", string)
     string = replace_ignore_quotes(" div ", " // ", string)
     string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)NOT (.*)", r"\1__bitwise_not__(\2)", string)
