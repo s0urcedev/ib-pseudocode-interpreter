@@ -2,10 +2,10 @@ from functools import reduce
 from re import search, findall
 try:
     from tools import adapt_condition, adapt_expression, __bitwise_not__, printify, replace_ignore_quotes
-    from data_structures import Array, Dictionary, Collection, Stack, Queue
+    from data_structures import Array, ArrayInternal, Dictionary, Collection, CollectionInternal, Stack, Queue
 except:
     from interpreter.legacy.tools import adapt_condition, adapt_expression, __bitwise_not__, printify, replace_ignore_quotes
-    from interpreter.legacy.data_structures import Array, Dictionary, Collection, Stack, Queue
+    from interpreter.legacy.data_structures import Array, ArrayInternal, Dictionary, Collection, CollectionInternal, Stack, Queue
 
 class Instruction:
 
@@ -28,17 +28,15 @@ class Instruction:
             "delete": self.delete,
             "run": self.run
         }
-        if text.find("=") != -1:
-            instruction = "assign"
-            content = (text[:text.find("=")].strip(), text[text.find("=") + 1:].strip())
-        else:
-            instruction = text[:text.find(" ")].lower()
-            content = (text[text.find(" ") + 1:].strip(), "")
+        instruction: str = text[:text.find(" ")].lower()
         if instruction in self.INSTRUCTIONS:
-            self.instruction = instruction
-            self.content = content
+            self.instruction: str = instruction
+            self.content = (text[text.find(" ") + 1:].strip(), "")
+        elif text.find("=") != -1:
+            self.instruction: str = "assign"
+            self.content = (text[:text.find("=")].strip(), text[text.find("=") + 1:].strip())
         else:
-            self.instruction = "run"
+            self.instruction: str = "run"
             self.content = (text.strip(), "")
 
     def input(self):
@@ -68,17 +66,16 @@ class Instruction:
             except:
                 if text in ["true", "false"]:
                     value = (text == "true")
+                elif text == "none":
+                    value = None
                 elif text[0] == "[" and text[-1] == "]":
-                    value = Array(eval(text))
+                    value = ArrayInternal(text[1:-1])
                 elif text[0] == "{" and text[-1] == "}":
-                    value = Collection(eval(f"[{text[1:-1]}]"))
+                    value = CollectionInternal(text[1:-1])
                 else:
                     value = text
-        match_obj = search(r"\[.*\]", self.content[0])
-        if match_obj != None:
-            self.read_write[self.content[0][:match_obj.start()]][eval(adapt_expression(self.content[0][match_obj.start() + 1:match_obj.end() - 1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))] = value
-        else:
-            self.read_write[self.content[0]] = value
+        self.content = (self.content[0], value)
+        self.assign(value_not_string=True)
 
     def output(self):
         if "__stdout__" in self.read_only[0]:
@@ -86,12 +83,47 @@ class Instruction:
         else:
             print(printify(self.content[0], dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write)))
 
-    def assign(self):
-        match_obj = search(r"\[.*\]", self.content[0])
-        if match_obj != None:
-            self.read_write[self.content[0][:match_obj.start()]][eval(adapt_expression(self.content[0][match_obj.start() + 1:match_obj.end() - 1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))] = eval(adapt_expression(self.content[1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
+    def assign(self, value_not_string = False) -> None:
+        variable_structure = self.read_write
+        variable_indexes = [self.content[0] if self.content[0].find("[") == -1 else self.content[0][:self.content[0].find("[")]]
+        if self.content[0].find("[") != -1:
+            bracket_diff = 0
+            current_index = ""
+            for i in range(self.content[0].find("["), len(self.content[0])):
+                if self.content[0][i] == "[":
+                    bracket_diff += 1
+                if self.content[0][i] == "]":
+                    bracket_diff -= 1
+                    if bracket_diff == 0:
+                        variable_indexes.append(current_index)
+                        current_index = ""
+                if (bracket_diff >= 1 and self.content[0][i] != "[") or bracket_diff > 1:
+                    current_index += self.content[0][i]
+            if current_index != "":
+                variable_indexes.append(current_index)
+        for i in range(0, len(variable_indexes) - 1):
+            if i > 0:
+                index = eval(adapt_expression(variable_indexes[i]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
+            else:
+                index = variable_indexes[i]
+            if variable_structure[index] is None:
+                try:
+                    next_index = eval(adapt_expression(variable_indexes[i + 1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
+                    if int(next_index) == next_index and next_index >= 0:
+                        variable_structure[index] = Array([])
+                    else:
+                        variable_structure[index] = Dictionary({})
+                except:
+                    variable_structure[index] = Dictionary({})
+            variable_structure = variable_structure[index]
+        if len(variable_indexes) > 1:
+            index = eval(adapt_expression(variable_indexes[-1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
         else:
-            self.read_write[self.content[0]] = eval(adapt_expression(self.content[1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
+            index = variable_indexes[-1]
+        if value_not_string:
+            variable_structure[index] = self.content[1]
+        else:
+            variable_structure[index] = eval(adapt_expression(self.content[1]), dict(reduce(lambda x, y: dict(x, **y), self.read_only), **self.read_write))
 
     def create(self):
         if "array" in self.content[0].lower():
@@ -373,8 +405,10 @@ class Code:
         self.global_vars = {
             "__bitwise_not__": __bitwise_not__,
             "Array": Array,
+            "ArrayInternal": ArrayInternal,
             "Dictionary": Dictionary,
             "Collection": Collection,
+            "CollectionInternal": CollectionInternal,
             "Stack": Stack,
             "Queue": Queue
         }
@@ -392,8 +426,10 @@ class CodeInternal:
         self.global_vars = {
             "__bitwise_not__": __bitwise_not__,
             "Array": Array,
+            "ArrayInternal": ArrayInternal,
             "Dictionary": Dictionary,
             "Collection": Collection,
+            "CollectionInternal": CollectionInternal,
             "Stack": Stack,
             "Queue": Queue,
             "__stdin__": stdin.replace("\r", "").split("\n")[::-1],
@@ -403,7 +439,7 @@ class CodeInternal:
         try:
             self.global_block = Block(code, [self.global_vars], {})
         except Exception as exc:
-            self.parsing_err = str(exc)
+            self.parsing_err = str(exc).replace(" (<string>, line 1)", "")
 
     def run(self):
         if self.parsing_err == "":
@@ -411,7 +447,7 @@ class CodeInternal:
                 self.global_block.execute()
                 return "\n".join(self.global_vars["__stdout__"])
             except Exception as exc:
-                return str(exc)
+                return str(exc).replace(" (<string>, line 1)", "")
         else:
             return self.parsing_err
     

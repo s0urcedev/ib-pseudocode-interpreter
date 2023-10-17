@@ -1,8 +1,8 @@
 from typing import Any
 try:
-    from tools import replace_ignore_quotes
+    from tools import replace_ignore_quotes, adapt_expression, divide_by_commas
 except:
-    from interpreter.modern.tools import replace_ignore_quotes
+    from interpreter.modern.tools import replace_ignore_quotes, adapt_expression, divide_by_commas
 
 class Array:
 
@@ -13,7 +13,10 @@ class Array:
             self.body: list[Any] = body
 
     def __getitem__(self, index: int) -> Any:
-        return self.body[index]
+        if index >= len(self.body):
+            return None
+        else:
+            return self.body[index]
 
     def __setitem__(self, index: int, value: Any) -> None:
         while index >= len(self.body):
@@ -27,7 +30,7 @@ class Array:
         return len(self.body)
 
     def __str__(self) -> str:
-        string: str = str(self.body)
+        string: str = '[' + ", ".join([(('"' + value + '"') if isinstance(value, str) else str(value)) for value in self.body]) + ']'
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", string)
         string = replace_ignore_quotes(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", string)
@@ -36,7 +39,18 @@ class Array:
         string = replace_ignore_quotes(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", string)
         string = replace_ignore_quotes(r"^False$", "false", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1none\2", string)
+        string = replace_ignore_quotes(r"^None([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"none\1", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None$", r"\1none", string)
+        string = replace_ignore_quotes(r"^None$", "none", string)
         return string
+
+class ArrayInternal(Array):
+
+    def __init__(self, body: str) -> None:
+        self.body: list[Any] = []
+        for elem in divide_by_commas(body):
+            self.body.append(eval(adapt_expression(elem.strip())))
 
 class Dictionary:
 
@@ -44,13 +58,16 @@ class Dictionary:
         self.body: dict[Any, Any] = body
 
     def __getitem__(self, key: Any) -> Any:
-        return self.body[key]
+        if key not in self.body:
+            return None
+        else:
+            return self.body[key]
 
     def __setitem__(self, key: Any, value: Any) -> None:
         self.body[key] = value
 
     def __str__(self) -> str:
-        string: str = str(self.body)
+        string: str = '{' + ", ".join([(('"'+ key + '"') if isinstance(key, str) else str(key)) + ': ' + (('"' + self.body[key] + '"') if isinstance(self.body[key], str) else str(self.body[key])) for key in self.body]) + '}'
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", string)
         string = replace_ignore_quotes(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", string)
@@ -59,6 +76,10 @@ class Dictionary:
         string = replace_ignore_quotes(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", string)
         string = replace_ignore_quotes(r"^False$", "false", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1none\2", string)
+        string = replace_ignore_quotes(r"^None([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"none\1", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None$", r"\1none", string)
+        string = replace_ignore_quotes(r"^None$", "none", string)
         return string
 
 class Collection:
@@ -93,7 +114,7 @@ class Collection:
         return len(self.body)
     
     def __str__(self) -> str:
-        string: str = str(self.body)
+        string: str = '{' + ", ".join([(('"' + value + '"') if isinstance(value, str) else str(value)) for value in self.body]) + '}'
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", string)
         string = replace_ignore_quotes(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", string)
@@ -102,8 +123,20 @@ class Collection:
         string = replace_ignore_quotes(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", string)
         string = replace_ignore_quotes(r"^False$", "false", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1none\2", string)
+        string = replace_ignore_quotes(r"^None([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"none\1", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None$", r"\1none", string)
+        string = replace_ignore_quotes(r"^None$", "none", string)
         string = replace_ignore_quotes(r"^\s*\[(.*)\]", r"{\1}", string)
         return string
+
+class CollectionInternal(Collection):
+
+    def __init__(self, body: str) -> None:
+        self.body: list[Any] = []
+        for elem in divide_by_commas(body):
+            self.body.append(eval(adapt_expression(elem.strip())))
+            self.index: int = 0
 
 class Stack:
 
@@ -129,7 +162,7 @@ class Stack:
         return len(self.body)
 
     def __str__(self) -> str:
-        string: str = str(self.body)
+        string: str = '[' + ", ".join([(('"' + value + '"') if isinstance(value, str) else str(value)) for value in self.body]) + ']'
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", string)
         string = replace_ignore_quotes(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", string)
@@ -138,6 +171,10 @@ class Stack:
         string = replace_ignore_quotes(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", string)
         string = replace_ignore_quotes(r"^False$", "false", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1none\2", string)
+        string = replace_ignore_quotes(r"^None([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"none\1", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None$", r"\1none", string)
+        string = replace_ignore_quotes(r"^None$", "none", string)
         return string
     
 class Queue:
@@ -166,7 +203,7 @@ class Queue:
         return len(self.body) - self.end_index
 
     def __str__(self) -> str:
-        string: str = str(self.body)
+        string: str = '[' + ", ".join([(('"' + value + '"') if isinstance(value, str) else str(value)) for value in self.body]) + ']'
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1true\2", string)
         string = replace_ignore_quotes(r"^True([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"true\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)True$", r"\1true", string)
@@ -175,4 +212,8 @@ class Queue:
         string = replace_ignore_quotes(r"^False([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"false\1", string)
         string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)False$", r"\1false", string)
         string = replace_ignore_quotes(r"^False$", "false", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None([^a-zA-Z0-9\[{(+\-*/_\"\']+)", r"\1none\2", string)
+        string = replace_ignore_quotes(r"^None([^a-zA-Z0-9\]})+\-*/_\"\']+)", r"none\1", string)
+        string = replace_ignore_quotes(r"([^a-zA-Z0-9\]})+\-*/_\"\']+)None$", r"\1none", string)
+        string = replace_ignore_quotes(r"^None$", "none", string)
         return string
